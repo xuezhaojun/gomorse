@@ -31,6 +31,6 @@ FromMorse(morse_code string) string
 ```
 
 # 依赖
-[gin]()
+[gin](https://github.com/gin-gonic/gin)
 
-[vugu]()
+[vugu](https://github.com/vugu/vugu)
