@@ -1,4 +1,4 @@
-package morse
+package gomorse
 
 var dict map[byte]string = map[byte]string{
 	'A':  ".-",
