@@ -18,13 +18,24 @@
                         <div class="section">
                             <div class="columns">
                                 <div class="column">
-                                    <textarea id="rawText" class="textarea" placeholder="此处对应英文内容" vg-content="c.RawText" rows=10"></textarea>
+                                    <textarea id="rawTextInput" class="textarea" placeholder="此处对应英文内容"></textarea>
                                 </div>
                                 <div class="column">
-                                    <textarea id="morseCode" class="textarea" placeholder="此处对应莫斯电码" vg-content="c.MorseCode" rows=10></textarea>
+                                    <textarea class="textarea" placeholder="" vg-content="c.MorseCode" readonly></textarea>
                                 </div>
                             </div>
                             <button class="button is-dark" @click="c.TranslateEngToMorse(event)">英文 -> 莫斯电码</button>
+                        </div>
+
+                        <div class="section">
+                            <div class="columns">
+                                <div class="column">
+                                    <textarea id="morseCodeInput" class="textarea" placeholder="此处对应莫斯电码"></textarea>
+                                </div>
+                                <div class="column">
+                                    <textarea class="textarea" placeholder="" vg-content="c.RawText" readonly></textarea>
+                                </div>
+                            </div>
                             <button class="button" @click="c.TranslateMorseToEng(event)">莫斯电码 -> 英文</button>
                         </div>
 
@@ -32,6 +43,9 @@
                             <h2 class="title">个性化莫斯电码</h2>
                             <div class="columns">
                                 <div class="column">
+                                    <div class="field">
+                                        <textarea id="MorseCodeCus" class="textarea" placeholder="个性化莫斯码"></textarea>
+                                    </div>
                                     <div class="field">
                                         <input id="customizeDot" class="input" placeholder="替换morse电码中的点"></input>
                                     </div>
@@ -43,7 +57,7 @@
                                     </div>
                                 </div>
                                 <div class="column">
-                                    <textarea class="textarea" placeholder="个性化莫斯码" rows=10 vg-content="c.CustimizeText"></textarea>
+                                    <textarea class="textarea" placeholder="" vg-content="c.CustimizeText" readonly></textarea>
                                 </div>
                             </div>
                         </div>
@@ -74,10 +88,11 @@ type Root struct {
 }
 
 const (
-    IDRawText = "rawText"
-    IDMorseCode = "morseCode"
+    IDRawText = "rawTextInput"
+    IDMorseCode = "morseCodeInput"
     IDCustomizeDot = "customizeDot"
     IDCustomizeSlash = "customizeSlash"
+    IDMorseCodeCus = "MorseCodeCus"
 )
 
 func getValue(id string) string {
@@ -85,20 +100,22 @@ func getValue(id string) string {
 }
 
 func (c *Root) TranslateEngToMorse(e vugu.DOMEvent) {
+    c.MorseCode = ""
     rawText := getValue(IDRawText)
     err := gomorse.Valid(rawText)
     if err != nil {
         c.ErrMsg = err.Error()
         return 
     }
-    morseCode := gomorse.TranslateEngToMorse(rawText)
+    morseCode := gomorse.ToMorse(rawText)
     fmt.Println("morseCode",morseCode)
     c.MorseCode = morseCode
 }
 
 func (c *Root) TranslateMorseToEng(e vugu.DOMEvent) {
+    c.RawText = ""
     morseCode := getValue(IDMorseCode)
-    rawText := gomorse.TranslateMorseToEng(morseCode)
+    rawText := gomorse.FromMorse(morseCode)
     fmt.Println(rawText)
     c.RawText = rawText
 }
@@ -106,7 +123,7 @@ func (c *Root) TranslateMorseToEng(e vugu.DOMEvent) {
 func (c *Root) Custimize(e vugu.DOMEvent) {
     dot := getValue(IDCustomizeDot)
     slash := getValue(IDCustomizeSlash)
-    morseCode := getValue(IDMorseCode)
+    morseCode := getValue(IDMorseCodeCus)
     morseCode = strings.ReplaceAll(morseCode,".",dot)
     morseCode = strings.ReplaceAll(morseCode,"-",slash)
     fmt.Println("new morse code:", morseCode)
