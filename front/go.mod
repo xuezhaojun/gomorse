@@ -8,4 +8,3 @@ require (
 )
 
 replace github.com/go-resty/resty => gopkg.in/resty.v1 v1.11.0
-replace github.com/xuezhaojun/gomorse => ../morse
