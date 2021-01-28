@@ -26,3 +26,11 @@ This will retrieve the library.
 ``` go
     morseCode := gomorse.FromMorse(text)
 ```
+
+## Frontend 
+
+You can visit [here]() to 
+
+## Public API
+
+We offer public api to provide translation operations too.
